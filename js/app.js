@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x,y) {
+var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,17 +8,7 @@ var Enemy = function(x,y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
-    this.speed = 100;
-};
-
-//get a random speed for the Enemy
-Enemy.prototype.variableSpeed = function() {
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-    this.speed = getRandomInt(1,3);
+    this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
@@ -27,7 +17,6 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    Enemy.variableSpeed;
     this.x = this.x + (this.speed * dt);
         if (this.x > 505) {
             this.reset();
@@ -37,8 +26,9 @@ Enemy.prototype.update = function(dt) {
 
 //moves the enemy to an starting position
 Enemy.prototype.reset = function (){
-    this.x = 20;
-}
+    this.x = -140;
+};
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -48,8 +38,8 @@ Enemy.prototype.render = function() {
 //If the collision occurs, the player goes to her starting position
 //If the players reaches the water, the enemies stop and die.
 Enemy.prototype.verifyCollisions = function () {
-    var playerBox = {x:player.x, y:player.y, width:70, height:70};
-    var enemyBox = {x:this.x, y:this.y, width:70, height:70};
+    var playerBox = {x:player.x, y:player.y, width:50, height:50};
+    var enemyBox = {x:this.x, y:this.y, width:50, height:50};
 
     if (playerBox.x < enemyBox.x + enemyBox.width &&
         playerBox.x + playerBox.width > enemyBox.x &&
@@ -78,10 +68,18 @@ Player.prototype.render = function() {
 
 //verify that the player is inside the board or canvas
 Player.prototype.update = function() {
-    if (this.x >  499 || this.x < 0)
-        this.reset();
-    if (this.y > 400 || this.y < 0)
-        this.reset();
+    if (this.x >  420) {
+        this.x = 400;
+    }
+    if (this.x < 0) {
+        this.x = 0;
+    }
+    if (this.y > 400) {
+        this.y = 390;
+    }
+    if (this.y < 0) {
+        this.y = 0;
+    }
 };
 
 //puts the player in the starting position
@@ -89,10 +87,6 @@ Player.prototype.reset = function() {
     this.x = 200;
     this.y = 400;
     this.lifes -= 1;
-    //console.log(this.lifes);
-    //if (this.lifes <= 0) {
-    //    console.log("End of the game");
-    //}
 };
 
 //verify if the player reaches the water, using the y position.
@@ -169,11 +163,33 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+//get a random number
+variableInt = function() {
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    return getRandomInt(1,3);
+};
+
 //creation of enemies
 var allEnemies = [new Enemy()];
-allEnemies.push(new Enemy(80,60));
-allEnemies.push(new Enemy(10,145));
-allEnemies.push(new Enemy(160,225));
+var numEnemies = 100;
+var speed = 100;
+
+for (var i = 0; i <= numEnemies; i++) {
+    var randomVal = variableInt();
+    x = 2 * randomVal;
+    speed = 80 * randomVal;
+    if (randomVal == 1)
+        y = 60;
+    if (randomVal == 2)
+        y = 145;
+    if (randomVal == 3)
+        y = 225;
+    allEnemies.push(new Enemy(x,y,speed));
+};
 
 //creation of the player
 var player = new Player();
