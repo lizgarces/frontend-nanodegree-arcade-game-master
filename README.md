@@ -23,6 +23,10 @@ ___
 clone the files from this repository.
 
 Then using Chrome, open arcade-game-master/index.html.
+
+Or copy this link to your browser:
+https://lizgarces.github.io/frontend-nanodegree-arcade-game-master/
+
 ## Important
 ___
 - Please make sure that all the files were copied in the correct folder.
